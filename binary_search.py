@@ -1,4 +1,5 @@
 import math
+import random
 
 
 # 折半查找法【适用于各种有序列表类型】
@@ -106,25 +107,48 @@ def insertsearch(l, mb):
     return result
 
 
+# 冒泡排序
+# 算法特点：稳定算法
+# 算法思路：每遍历一边，都会把值最大的选择出来，并将列表中元素整理的局部有序
+def bubblesort(l):
+    index = len(l)
+    i = 0
+    # 外层循环-控制目前排序值的位置
+    while i < index:
+        j = i + 1
+        # 内层循环-控制比较值的位置
+        while j < index:
+            if l[i] <= l[j]:
+                temp = l[j]
+                l[j] = l[i]
+                l[i] = temp
+            j = j + 1
+        i = i + 1
+    return l
+
+
 if __name__ == '__main__':
-    # 情形一：查找列表值分布不均匀
-    l = [1, 2, 3, 4, 5, 9, 172, 383, 1718, 6590, 100191]
-    # 情形二：列表元素较多，分布较均匀
-    l2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 42, 53, 124, 225, 326, 627, 728,
-          829, 930]
+    # 初始化一个包含n个元素的列表
+    n = 1000
+    i = 0
+    l = []
+    while i <= n:
+        l.append(random.randint(1, 10000))
+        i += 1
+    lsort = bubblesort(l)
     mb = 18
     # 折半查找
-    res_binary = binarysearch(l2, mb)
+    res_binary = binarysearch(lsort, mb)
     # 顺序查找
-    res_sequence = sequencesearch(l2, mb)
+    res_sequence = sequencesearch(lsort, mb)
     # 差值查找
-    res_insert = insertsearch(l2, mb)
+    #   res_insert = insertsearch(lsort, mb)
     # 查找结果集输出到控制台
     if res_binary['address'] != 999:
         print('经过%d次比较后，BinarySearch查找成功,找到目标值在列表的位置为：%d' % (res_binary['comp_num'], res_binary['address']))
         print('经过%d次比较后，SequenceSearch查找成功,找到目标值在列表的位置为：%d' % (res_sequence['comp_num'], res_sequence['address']))
-        print('经过%d次比较后，InsertSearch查找成功,找到目标值在列表的位置为：%d' % (res_insert['comp_num'], res_insert['address']))
+    #        print('经过%d次比较后，InsertSearch查找成功,找到目标值在列表的位置为：%d' % (res_insert['comp_num'], res_insert['address']))
     else:
         print('经过%d次比较后，BinarySearch查找失败，目标值在列表中不存在！！' % res_binary['comp_num'])
         print('经过%d次比较后，SequenceSearch查找成功，目标值在列表中不存在！！' % res_sequence['comp_num'])
-        print('经过%d次比较后，InsertSearch查找成功，目标值在列表中不存在！！' % res_insert['comp_num'])
+#       print('经过%d次比较后，InsertSearch查找成功，目标值在列表中不存在！！' % res_insert['comp_num'])
