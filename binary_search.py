@@ -47,7 +47,7 @@ def binarysearch(l, mb):
 
 # 顺序查找法
 # 算法特点：不稳定，不要求查找列表有序，适用性最好
-# 算法思路：遍历列表所有元素，查找与目标值想等的元素，不要求列表元素有序，不要求列表元素固定数据类型，算法事件复杂度（O(n)）
+# 算法思路：遍历列表所有元素，查找与目标值相等的元素，不要求列表元素有序，不要求列表元素固定数据类型，算法事件复杂度（O(n)）
 def sequencesearch(l, mb):
     m = mb
     # 记录比较次数
@@ -123,7 +123,7 @@ def insertsearch(l, mb):
 
 # 冒泡排序
 # 算法特点：稳定算法
-# 算法思路：每遍历一边，都会把值最大的选择出来，并将列表中元素整理的局部有序
+# 算法思路：每遍历一遍，都会把值最大的选择出来，并将列表中元素整理的局部有序
 def bubblesort(l):
     index = len(l)
     i = 0
@@ -141,16 +141,39 @@ def bubblesort(l):
     return l
 
 
+# 插入排序
+# 算法特点：稳定算法，适应性算法
+# 算法思路：每次选择无序序列中的一个元素，查找它在有序部分的插入点，插入目标元素，并向后移动有序部分的其他元素，直至列表中所有元素有序
+def insertsort(l):
+    # 申请一个遍历i，循环遍历要插入的元素
+    i = 0
+    for i in range(len(l)):
+        # 将要插入的元素暂存在变量
+        x = l[i]
+        # 初始化插入点比较变量
+        j = i
+        # 当插入比较的位置大于0并且位置的值比要插入的值大时，将该位置元素后移
+        # 当插入比较的值等于0或者位置的值比要插入的值小时，退出循环，找到了要插入元素的位置
+        while j > 0 and l[j - 1] > x:
+            l[j - 1] = l[j]
+            j = j - 1
+        # 将待插入元素插入找到的位置
+        l[j] = x
+    return l
+
+
 if __name__ == '__main__':
     # 初始化一个包含n个元素的列表
     n = 1000
     i = 0
     l = []
     while i <= n:
-        l.append(random.randint(1, 10000))
+        l.append(random.randint(1, 100))
         i += 1
-    lsort = bubblesort(l)
-    mb = 8765
+#   lsort = bubblesort(l)
+    lsort = insertsort(l)
+    print(lsort)
+    mb = 10
     # 折半查找
     res_binary = binarysearch(lsort, mb)
     # 顺序查找
