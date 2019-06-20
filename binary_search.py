@@ -14,7 +14,7 @@ def binarysearch(l, mb):
     result = {}
     # 边界判断，若查找列表为空，不做比较，直接输出结果
     if len(l) == 0:
-        result['address'] = 999
+        result['address'] = 000
         result['comp_num'] = 0
         return result
     # 查询列表低值索引
@@ -49,7 +49,7 @@ def binarysearch(l, mb):
             mid = math.ceil((down + up) >> 1)
             result['comp_num'] = comp_num
     # 目标值未找到，返回错误码
-    result['address'] = 999
+    result['address'] = 000
     return result
 
 
@@ -61,7 +61,7 @@ def binarysearchv2(l, mb):
     if len(l) == 0:
         resultnull = {}
         resultnull['comp_num'] = 0
-        resultnull['address'] = 999
+        resultnull['address'] = 000
         return resultnull
     # 若带查找的list不为空
     else:
@@ -73,7 +73,7 @@ def binarysearchv2(l, mb):
         if m < l[down] or m > l[up]:
             resultout = {}
             resultout['comp_num'] = 0
-            resultout['address'] = 999
+            resultout['address'] = 000
             return resultout
         # 目标值在待查找list的值域以内
         else:
@@ -103,7 +103,71 @@ def binarysearchv2(l, mb):
                     comp_num += 1
                     resultin['comp_num'] = comp_num
             # 目标值未找到，输出错误信息
-            resultin['address'] = 999
+            resultin['address'] = 000
+            return resultin
+
+
+# 重构二分查找方法，适用待查找元素在列表重复的情形
+# 在字典里封装一个list存储所有带查找元素的索引
+def binarysearchv3(l, mb):
+    # 判断list是否为空
+    if len(l) == 0:
+        resultnull = {}
+        resultnull['comp_num'] = 0
+        resultnull['address'] = 000
+        return resultnull
+    # 若带查找的list不为空
+    else:
+        m = mb
+        # 初始化待查找list的上、下索引
+        down = 0
+        up = len(l) - 1
+        # 判断目标值是否超过了待查找list的值域
+        if m < l[down] or m > l[up]:
+            resultout = {}
+            resultout['comp_num'] = 0
+            resultout['address'] = 000
+            return resultout
+        # 目标值在待查找list的值域以内
+        else:
+            # 初始化中间值的索引
+            mid = math.ceil(calculatemid(down, up))
+            # 初始化返回dict，用于信息输出
+            resultin = {}
+            comp_num = 0
+            res = []
+            # 当低值索引不大于高值索引时，程序循环执行
+            while down <= up:
+                # 找到list中目标值的索引位置，跳出循环
+                if m == l[mid]:
+                    # 查找出list中出现的最小的目标值索引
+                    while mid > 0 and l[mid - 1] == m:
+                        mid = mid - 1
+                        comp_num += 1
+                        resultin['comp_num'] = comp_num
+                    # 顺序查找与目标值想等的多个list索引位置，并记录下来
+                    while mid > 0 and l[mid] == m:
+                        res.append(mid)
+                        mid = mid + 1
+                        comp_num += 1
+                        resultin['comp_num'] = comp_num
+                    # 输出所有与目标值相等的列表元素索引
+                    resultin['address'] = res
+                    return resultin
+                # 目标值小于中间值，缩小一半查找范围，修改上索引值
+                if m < l[mid]:
+                    up = mid - 1
+                    mid = math.ceil(calculatemid(down, up))
+                    comp_num += 1
+                    resultin['comp_num'] = comp_num
+                # 目标值大于中间值，缩小一半查找范围，修改下索引值
+                if m > l[mid]:
+                    down = mid + 1
+                    mid = math.ceil(calculatemid(down, up))
+                    comp_num += 1
+                    resultin['comp_num'] = comp_num
+            # 目标值未找到，输出错误信息
+            resultin['address'] = res
             return resultin
 
 
@@ -126,7 +190,7 @@ def sequencesearch(l, mb):
     # 边界判断，不比较直接输出结果
     if len(l) == 0:
         result['comp_num'] = 0
-        result['address'] = 999
+        result['address'] = 000
         return result
     for i in range(len(l)):
         if m == l[i]:
@@ -139,7 +203,7 @@ def sequencesearch(l, mb):
             result['comp_num'] = comp_num
             i += 1
     # 目标值未找到，返回错误码
-    result['address'] = 999
+    result['address'] = 000
     return result
 
 
@@ -156,7 +220,7 @@ def insertsearch(l, mb):
     result = {}
     # 边界判断，不比较直接输出结果
     if len(l) == 0:
-        result['address'] = 999
+        result['address'] = 000
         result['comp_num'] = 0
         return result
     # 查询列表比较值索引[索引点选择依据是查找值在查找区间的分布情况]
@@ -196,7 +260,7 @@ def insertsearch(l, mb):
                 mid = math.ceil((down + up) / 2)
             result['comp_num'] = comp_num
     # 目标值未找到，返回错误码
-    result['address'] = 999
+    result['address'] = 000
     return result
 
 
@@ -265,36 +329,26 @@ def selectsort(l):
 
 # 执行最基本的冒烟测试实例
 if __name__ == '__main__':
-    # 初始化一个包含n个元素的列表
-    n = 1000
-    i = 0
-    mb = 2
-    l = [1, 2, 3, 4, 5, 54, 27, 61, 102]
-    l2 = [2, 3, 4, 5, 5, 6, 7, 8, 9]
-    # while i <= n:
-    #     l.append(random.randint(1, 100))
-    #     i += 1
-    #   lsort = bubblesort(l)
-    lsort = selectsort(l)
-    # 折半查找
-    res_binary = binarysearchv2(lsort, mb)
+    # 初始化测试用例
+    mb = 6
+    print('待查找的目标值为：%d' % mb)
+    print('---------------------------')
+    l = [1, 2, 3, -4, 5, 54, -4, -4, -27, 61, 102]
+    # 输出原列表元素
+    print('原列表为：%s' % l)
     # 顺序查找
-    res_sequence = sequencesearch(l2, mb)
+    res_sequence = sequencesearch(l, mb)
+    print('经过%d次比较后，SequenceSearch,找到目标值在列表的位置为：%d' % (res_sequence['comp_num'], res_sequence['address']))
+    print('---------------------------')
+    # 列表排序，顺序排序【可以选择：冒泡排序、插入排序、选择排序三种算法】
+    lsort = selectsort(l)
+    # 输出排序后列表元素
+    print('顺序排序后的列表为：%s' % lsort)
+    # 折半查找
+    res_binary = binarysearchv3(lsort, mb)
     # 差值查找
     res_insert = insertsearch(lsort, mb)
     # 查找结果集输出到控制台
-    if res_binary['address'] != 999:
-        print(lsort)
-        print('经过%d次比较后，BinarySearch查找成功,找到目标值在列表的位置为：%d' % (res_binary['comp_num'], res_binary['address']))
-        print('经过%d次比较后，InsertSearch查找成功,找到目标值在列表的位置为：%d' % (res_insert['comp_num'], res_insert['address']))
-        print('----------------------------------------------')
-        print(l2)
-        print('经过%d次比较后，SequenceSearch查找成功,找到目标值在列表的位置为：%d' % (res_sequence['comp_num'], res_sequence['address']))
-    else:
-        print(lsort)
-        print('经过%d次比较后，BinarySearch查找失败，目标值在列表中不存在！！' % res_binary['comp_num'])
-        print('经过%d次比较后，InsertSearch查找成功，目标值在列表中不存在！！' % res_insert['comp_num'])
-        print('----------------------------------------------')
-        print(l2)
-        print('经过%d次比较后，SequenceSearch查找成功，目标值在列表中不存在！！' % res_sequence['comp_num'])
-
+    # 查找位置等于000代表查找失败，查找位置不等于000代表查找成功
+    print('经过%d次比较后，BinarySearch,找到目标值在列表的位置为：%s' % (res_binary['comp_num'], res_binary['address']))
+    print('经过%d次比较后，InsertSearch,找到目标值在列表的位置为：%d' % (res_insert['comp_num'], res_insert['address']))
