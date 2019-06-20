@@ -5,6 +5,8 @@ import random
 # 折半查找法【适用于各种有序列表类型】
 # 算法特点：稳定，适用性较好
 # 算法思路：待查找的集合必须是有序的向量存储集合，通过比较判定目标值的区间，逐步缩小查找范围，事件复杂度（O(logn)）
+# 本算法的实现有一个bug,当数据足够到，超出类型的最大值时，程序会发生内存溢出【(down + up) / 2】
+# 改进算法：(down + up) / 2 修改为 移位运算 (down + up) >> 1
 def binarysearch(l, mb):
     m = mb
     # 查询列表低值索引
@@ -12,7 +14,7 @@ def binarysearch(l, mb):
     # 查询列表高值索引
     up = len(l) - 1
     # 查询列表比较值索引
-    mid = math.ceil((down + up) / 2)
+    mid = math.ceil((down + up) >> 1)
     # 记录查询比较次数
     comp_num = 0
     # 返回结果集
@@ -32,13 +34,13 @@ def binarysearch(l, mb):
             comp_num += 1
             up = mid - 1
             # 结果值向上取整
-            mid = math.ceil((down + up) / 2)
+            mid = math.ceil((down + up) >> 1)
             result['comp_num'] = comp_num
         # 目标值比当前比较值大，将低值索引后移至当前比较值
         else:
             comp_num += 1
             down = mid + 1
-            mid = math.ceil((down + up) / 2)
+            mid = math.ceil((down + up) >> 1)
             result['comp_num'] = comp_num
     # 目标值未找到，返回错误码
     result['address'] = 999
@@ -162,22 +164,45 @@ def insertsort(l):
     return l
 
 
+# 插入排序
+# 算法特点：稳定算法，适应性算法
+# 算法思路：每次从待选序列中选择一个最小元素，然后插入到已排序部分的末尾，直至所有元素选择完毕，算法实践复杂度为o（n方）
+def selectsort(l):
+    # 申请一个循环变量i
+    i = 0
+    # 遍历列表中所有元素，i表示当前待插入的最小元素位置
+    for i in range(len(l)):
+        k = i
+        # 遍历未排序列表部分，找出最小元素的所在位置
+        for j in range(i, len(l)):
+            if l[j] < l[k]:
+                k = j
+        # 如果找到的最小元素不是当前位置元素，则将当前位置元素于搜索到的最小元素互换位置
+        if k != i:
+            tmp = l[i];
+            l[i] = l[k]
+            l[k] = tmp
+    # 返回已排序好的列表
+    return l
+
+
 if __name__ == '__main__':
     # 初始化一个包含n个元素的列表
     n = 1000
     i = 0
-    l = []
-    while i <= n:
-        l.append(random.randint(1, 100))
-        i += 1
-#   lsort = bubblesort(l)
-    lsort = insertsort(l)
+    l = [16, 2, 3, 43, 5, 61, 1, 8, 9, 10]
+    l2 = [16, 2, 3, 43, 5, 61, 1, 8, 9, 10]
+    # while i <= n:
+    #     l.append(random.randint(1, 100))
+    #     i += 1
+    #   lsort = bubblesort(l)
+    lsort = selectsort(l)
     print(lsort)
-    mb = 10
+    mb = 61
     # 折半查找
     res_binary = binarysearch(lsort, mb)
     # 顺序查找
-    res_sequence = sequencesearch(lsort, mb)
+    res_sequence = sequencesearch(l2, mb)
     # 差值查找
     res_insert = insertsearch(lsort, mb)
     # 查找结果集输出到控制台
