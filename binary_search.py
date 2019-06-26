@@ -284,6 +284,35 @@ def bubblesort(l):
     return l
 
 
+# 快速排序算法
+# 算法特点：稳定算法，冒泡排序算法的改进
+# 算法思路：选择一个比较值，将待排序列表整理成小值集合和大值集合，然后在小值集合和大值集合重复划分方法，直到每个划分仅存一个元素，排序结束
+# 快速排序是现存已知效率最好，应用中出现最多的排序算法
+def quicksort(down, uper, l):
+    i = down + 1
+    m = down
+    if down >= uper:
+        return l
+    swap(down, random.randint(down, uper), l)
+    while i <= uper:
+        if l[i] < l[down]:
+            m = m + 1
+            swap(m, i, l)
+        i = i + 1
+    swap(down, m, l)
+    quicksort(down, m - 1, l)
+    quicksort(m + 1, uper, l)
+    return l
+
+
+# 交换列表元素方法
+def swap(a, b, l):
+    tmp = l[a]
+    l[a] = l[b]
+    l[b] = tmp
+    return l
+
+
 # 插入排序
 # 算法特点：稳定算法，适应性算法
 # 算法思路：每次选择无序序列中的一个元素，查找它在有序部分的插入点，插入目标元素，并向后移动有序部分的其他元素，直至列表中所有元素有序
@@ -333,22 +362,24 @@ if __name__ == '__main__':
     mb = 6
     print('待查找的目标值为：%d' % mb)
     print('---------------------------')
-    l = [1, 2, 3, -4, 5, 54, -4, -4, -27, 61, 102]
+    l = [1, 2, 3, -4, 5, 54, -27, 61, 102]
     # 输出原列表元素
     print('原列表为：%s' % l)
-    # 顺序查找
-    res_sequence = sequencesearch(l, mb)
-    print('经过%d次比较后，SequenceSearch,找到目标值在列表的位置为：%d' % (res_sequence['comp_num'], res_sequence['address']))
-    print('---------------------------')
-    # 列表排序，顺序排序【可以选择：冒泡排序、插入排序、选择排序三种算法】
-    lsort = selectsort(l)
-    # 输出排序后列表元素
-    print('顺序排序后的列表为：%s' % lsort)
-    # 折半查找
-    res_binary = binarysearchv3(lsort, mb)
-    # 差值查找
-    res_insert = insertsearch(lsort, mb)
-    # 查找结果集输出到控制台
-    # 查找位置等于000代表查找失败，查找位置不等于000代表查找成功
-    print('经过%d次比较后，BinarySearch,找到目标值在列表的位置为：%s' % (res_binary['comp_num'], res_binary['address']))
-    print('经过%d次比较后，InsertSearch,找到目标值在列表的位置为：%d' % (res_insert['comp_num'], res_insert['address']))
+    lsort = quicksort(0, 8, l)
+    print(lsort)
+    # # 顺序查找
+    # res_sequence = sequencesearch(l, mb)
+    # print('经过%d次比较后，SequenceSearch,找到目标值在列表的位置为：%d' % (res_sequence['comp_num'], res_sequence['address']))
+    # print('---------------------------')
+    # # 列表排序，顺序排序【可以选择：冒泡排序、插入排序、选择排序三种算法】
+    # lsort = selectsort(l)
+    # # 输出排序后列表元素
+    # print('顺序排序后的列表为：%s' % lsort)
+    # # 折半查找
+    # res_binary = binarysearchv3(lsort, mb)
+    # # 差值查找
+    # res_insert = insertsearch(lsort, mb)
+    # # 查找结果集输出到控制台
+    # # 查找位置等于000代表查找失败，查找位置不等于000代表查找成功
+    # print('经过%d次比较后，BinarySearch,找到目标值在列表的位置为：%s' % (res_binary['comp_num'], res_binary['address']))
+    # print('经过%d次比较后，InsertSearch,找到目标值在列表的位置为：%d' % (res_insert['comp_num'], res_insert['address']))
