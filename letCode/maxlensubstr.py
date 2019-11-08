@@ -29,9 +29,12 @@ class Solution:
 
     # 滑动窗口识别算法
     def lengthOfLongestSubstringv2(self, str):
+        # i控制窗口起始位置，j控制窗口结束位置
         i = 0
         j = 0
+        # res返回值，存储最大不重复字串的长度
         res = 0
+        # substr存储字串中出现过的字母元素【集合内元素不重复出现】
         substr = set()
         while i < len(str) and j < len(str):
             if substr.__contains__(str[j]) == False:
