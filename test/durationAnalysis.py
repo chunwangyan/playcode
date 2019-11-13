@@ -100,11 +100,55 @@ class Solution_v3:
             elif list[j] < threshold and j - i < sublistlen:
                 i = j + 1
                 j = i
-            # 滑动窗口起始位置不变，结束位置后移
+            # 滑动窗口起始位置不变且j的位置未超出listlen，结束位置后移
+            elif j != listlen - 1:
+                j = j + 1
+            # 滑动窗口j的位置超出listlen，将找到的子列表赋值给返回结果
             else:
                 j = j + 1
+                res.append(list[i:j])
         # 返回找到的所有满足条件的子列表
         return res
+
+
+class Solution_v4:
+    def parkingdurationanalysis_v4(self, list):
+        # i控制窗口起始位置，j控制窗口结束位置
+        i = 0
+        j = i
+        # listlen表示列表最大长度
+        listlen = len(list)
+        # res存储返回值
+        res = []
+        # 阀值
+        threshold = 0.7
+        # 子列表长度
+        sublistlen = 3
+        # 当窗口的起始和结束位置都在目标列表范围内时，条件满足
+        while i < listlen and j >= i and j < listlen:
+            # 判断起始位置元素是否满足大于0.8饱和度，不满足则将窗口位置后移
+            if list[i] < threshold:
+                i = i + 1
+                j = i
+            # 找到一个满足条件的子列表
+            elif list[j] < threshold and j - i >= sublistlen:
+                res.append(list[i:j])
+                i = j
+                j = i
+            # 如果找到的字串，起始位置满足要求，结束位置不满足要求，窗口后移
+            elif list[j] < threshold and j - i < sublistlen:
+                i = j + 1
+                j = i
+            # 滑动窗口起始位置不变且j的位置未超出listlen，结束位置后移
+            else:
+                j = j + 1
+        # 如果j的索引位置越界，将找到的字串直接赋值给res并返回，res只含一个元素
+        if j == listlen:
+            res.append(list[i:j])
+            return res
+        # 如果j的索引位置未越界，直接返回结果
+        else:
+            return res
 
 
 if __name__ == '__main__':
@@ -113,11 +157,15 @@ if __name__ == '__main__':
     #          21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
     #          31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
     #          41, 42, 43, 44, 45, 46]
+    # 常规测试用例
     berthsaturation = [0.5, 0.4, 0.8, 0.9, 0.95, 0.5, 0.4, 0.3, 0.2, 0.1,
                        0.8, 0.1, 0.9, 0.8, 0.5, 0.3, 0.2, 0.1, 0.4, 0.5,
                        0.8, 0.9, 0.1, 0.3, 0.6, 0.5, 0.7, 0.98, 0.76, 0.1,
                        0.1, 0.8, 0.98, 0.98, 0.87, 0.2, 0.3, 0, 3, 0.2, 0.1,
                        0.1, 0.85, 0.9, 0.8, 0.2, 0.3, 0.4]
+
+    # 边界值判断用例
+    berthsaturation_v2 = [0.1, 0.8, 0.8, 0.9, 0.95, 0.8]
     # duration = Solution()
     # subduration = duration.cut(index)
     # maxlen = duration.lengthOfLongestSubstring(subduration, berthsaturation)
@@ -132,5 +180,5 @@ if __name__ == '__main__':
     # print(filter(list))
 
     res = Solution_v3()
-    list = res.parkingdurationanalysis_v3(berthsaturation)
+    list = res.parkingdurationanalysis_v3(berthsaturation_v2)
     print(list)
