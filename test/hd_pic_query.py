@@ -15,7 +15,7 @@ db_config = {
 pic_config = {
     # 图片服务接口
     "picService_url": "http://pic.hd.aipark.com/picture/2.0/business/query/",
-    "inputFilePath": "/Users/yanchw/Desktop/hd_debt_order_full.csv"
+    "inputFilePath": "/Users/yanchw/Desktop/hd_debt_order.csv"
 }
 
 sql_str = """"""
@@ -106,21 +106,26 @@ class hd_pic_query:
         entry_total_none = 0
         exit_total_none = 0
         csv_data = pd.read_csv(pic_config["inputFilePath"])
-        df_entryOprNum = csv_data["entryOprNum"]
-        df_exitOprNum = csv_data["exitOprNum"]
-        for entryOprNum in df_entryOprNum:
-            response_entryOprNum = self.getPictureByOprNum(entryOprNum)
-            print(response_entryOprNum)
-            flag_01 = self.isFull(response_entryOprNum)
-            if flag_01 == 1:
-                entry_total_none = entry_total_none + 1
-        print(entry_total_none)  # 1812
-        for exitOprNum in df_exitOprNum:
-            response_exitOprNum = self.getPictureByOprNum(exitOprNum)
-            flag_02 = self.isFull(response_exitOprNum)
-            if flag_02 == 1:
-                exit_total_none = exit_total_none + 1
-        print(exit_total_none)  #
+        df_entryOprNum = csv_data[["entryOprNum", "entryDataSource"]]
+        df_exitOprNum = csv_data[["exitOprNum", "exitDataSource"]]
+        for row in df_exitOprNum.iterrows():
+            print(row["exitOprNum"])
+        # for entryOprNum in df_entryOprNum:
+        #     response_entryOprNum = self.getPictureByOprNum(entryOprNum)
+        #     # print(response_entryOprNum)
+        #     flag_01 = self.isFull(response_entryOprNum)
+        #     if flag_01 == 1:
+        #         print(entryOprNum)
+        #         entry_total_none = entry_total_none + 1
+        # print("entry_total_none：%d" % entry_total_none)  # 1812
+        # print("--------------------------------------------")
+        # for exitOprNum in df_exitOprNum:
+        #     response_exitOprNum = self.getPictureByOprNum(exitOprNum)
+        #     flag_02 = self.isFull(response_exitOprNum)
+        #     if flag_02 == 1:
+        #         print(exitOprNum)
+        #         exit_total_none = exit_total_none + 1
+        # print("exit_total_none:%d" % exit_total_none)  #
         return None
 
     # 判断图片是否完备 0-完备，1-不完备
